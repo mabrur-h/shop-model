@@ -4,6 +4,7 @@ const CategoryModel = require('./models/CategoryModel');
 const ProductModel = require('./models/ProductModel');
 const ParamsModel = require('./models/ParamsModel');
 const CartModel = require('./models/CartModel');
+const OrderModel = require('./models/OrderModel');
 
 const sequelize = new Sequelize('postgres://postgres:pgadmin@localhost:5432/shop_model', {
     logging: sql => console.log("SQL: ", sql)
@@ -20,6 +21,7 @@ async function main() {
         db.products = await ProductModel(Sequelize, sequelize);
         db.params = await ParamsModel(Sequelize, sequelize);
         db.carts = await CartModel(Sequelize, sequelize);
+        db.orders = await OrderModel(Sequelize, sequelize);
 
         db.categories.hasMany(db.products, {
             foreignKey: {
@@ -63,7 +65,7 @@ async function main() {
             }
         })
 
-        db.products.hasMany(db.cart, {
+        db.products.hasMany(db.carts, {
             foreignKey: {
                 name: "product_id",
                 allowNull: false
@@ -73,6 +75,20 @@ async function main() {
         db.carts.belongsTo(db.products, {
             foreignKey: {
                 name: "product_id",
+                allowNull: false
+            }
+        })
+
+        db.users.hasMany(db.orders, {
+            foreignKey: {
+                name: "user_id",
+                allowNull: false
+            }
+        })
+
+        db.orders.belongsTo(db.users, {
+            foreignKey: {
+                name: "user_id",
                 allowNull: false
             }
         })
