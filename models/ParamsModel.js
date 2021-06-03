@@ -1,5 +1,5 @@
 module.exports = async (Sequelize, sequelize) => {
-    return await sequelize.define('products', {
+    return await sequelize.define('params', {
         id: {
             type: Sequelize.DataTypes.UUID,
             primaryKey: true,
