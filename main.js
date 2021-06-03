@@ -22,6 +22,7 @@ async function main() {
         db.params = await ParamsModel(Sequelize, sequelize);
         db.carts = await CartModel(Sequelize, sequelize);
         db.orders = await OrderModel(Sequelize, sequelize);
+        db.orderedProducts = await OrderModel(Sequelize, sequelize);
 
         db.categories.hasMany(db.products, {
             foreignKey: {
@@ -93,6 +94,33 @@ async function main() {
             }
         })
 
+        db.orders.hasMany(db.orderedProducts, {
+            foreignKey: {
+                name: "order_id",
+                allowNull: false
+            }
+        })
+
+        db.orderedProducts.belongsTo(db.orders, {
+            foreignKey: {
+                name: "order_id",
+                allowNull: false
+            }
+        })
+
+        db.products.hasMany(db.orderedProducts, {
+            foreignKey: {
+                name: "product_id",
+                allowNull: false
+            }
+        })
+
+        db.orderedProducts.belongsTo(db.products, {
+            foreignKey: {
+                name: "product_id",
+                allowNull: false
+            }
+        })
 
         await sequelize.sync({ force: true });
 
